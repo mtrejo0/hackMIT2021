@@ -9,7 +9,14 @@ class Convo():
     
     def update(self, message):
         self.history += [message]
-        reply = "Test Reply"
+
+        reply = ""
+        if message == "1":
+            reply = "you replied 1, you are a seller!"
+
+        if message == "2":
+            reply = "you replied 1, you are a buyer!"
+            
         self.history += [reply]
         return reply
 
@@ -19,7 +26,6 @@ class API():
     def __init__(self):
         self.sellers = []
         self.buyers = []
-    
 
     def get_buyer(self, phone):
         return [buyer for buyer in self.buyers if buyer["phone"] == phone][0]
@@ -31,8 +37,8 @@ class API():
         buyer = self.get_buyer(phone)
         return buyer["conversation"].update(message)
 
-    def add_seller(self, phone, message):
-        new_seller = {"phone": phone, "message": message}
+    def add_seller(self, phone, message, location = None):
+        new_seller = {"phone": phone, "message": message, "location": location}
         self.sellers.append(new_seller)
         return {"message": "Your store is up!", "seller": new_seller}
 
@@ -45,7 +51,7 @@ if __name__ == "__main__":
 
     api.add_seller("1", "tacos")
     api.add_seller("2", "pupusas")
-    api.add_seller("3", "hotdogs")
+    api.add_seller("3", "hotdogs", (10,10))
 
     print(api.sellers)
 
@@ -53,7 +59,7 @@ if __name__ == "__main__":
 
     print(api.buyers)
 
-    api.update("4", "1")
+    print(api.update("4", "2"))
 
 
 

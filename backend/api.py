@@ -1,22 +1,26 @@
 import requests
 import json
 import random
-
+from random import randint
 
 class Convo():
     def __init__(self):
         self.history = []
     
-    def update(self, message):
+    def reset(self):
+        self.history = []
+        return "buyer (1) or seller (2)"
+    
+    def update(self, message, api):
         self.history += [message]
 
         reply = ""
         if message == "1":
-            reply = "you replied 1, you are a seller!"
-
+            reply = "you are a buyer! here are the stores: \n" + api.get_stores_list()  
+        
         if message == "2":
-            reply = "you replied 1, you are a buyer!"
-            
+            reply = "you are a seller! what are you selling? \nmessage="
+
         self.history += [reply]
         return reply
 
@@ -24,42 +28,46 @@ class Convo():
 class API():
 
     def __init__(self):
-        self.sellers = []
-        self.buyers = []
-
-    def get_buyer(self, phone):
-        return [buyer for buyer in self.buyers if buyer["phone"] == phone][0]
+        self.users = []
+        self.conversations = []
+        self.stores = [{"message": "tacos"}]
     
-    def add_buyer(self, phone):
-        self.buyers += [{"phone": phone, "conversation": Convo()}]
+    
+    def add_user(self, phone):
+        user = {"phone": phone, "conversation": Convo()}
+        self.users += [user]
+        return user["conversation"].reset()
+    
+    def get_user(self, phone):
+        return [user for user in self.users if user["phone"] == phone][0]
     
     def update(self, phone, message):
-        buyer = self.get_buyer(phone)
-        return buyer["conversation"].update(message)
+        user = self.get_user(phone)
+        return user["conversation"].update(message, self)
 
-    def add_seller(self, phone, message, location = None):
-        new_seller = {"phone": phone, "message": message, "location": location}
-        self.sellers.append(new_seller)
-        return {"message": "Your store is up!", "seller": new_seller}
+    def add_store(self, phone, message, location = None):
+        store = {"phone": phone, "message": message, "location": location}
+        self.stores += [store]
 
-    def get_seller(self, phone):
-        return [seller for seller in self.sellers if seller["phone"] == phone][0]
- 
+    def get_stores_list(self):
+        stores = ""
+        for i, store in enumerate(self.stores):
+            stores += "({}) {} \n".format(i, store["message"])
+        return stores
+    
 
 if __name__ == "__main__":
     api = API()
+    n = 10
+    phone = ''.join(["{}".format(randint(0, 9)) for num in range(0, n)])
+    reply = api.add_user(phone)
+    while(True):
+        print(reply)
+        message = input()
+        reply = api.update(phone, message)
+        
+        
 
-    api.add_seller("1", "tacos")
-    api.add_seller("2", "pupusas")
-    api.add_seller("3", "hotdogs", (10,10))
-
-    print(api.sellers)
-
-    api.add_buyer("4")
-
-    print(api.buyers)
-
-    print(api.update("4", "2"))
 
 
 

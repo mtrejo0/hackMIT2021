@@ -4,8 +4,23 @@ import random
 from random import randint
 
 class Convo():
+    BUY_OR_SELL = "Would you like to browse for products or sell them? Send 'buy' or 'sell'."
+    LOCATION = "Please share your location with us."
+    BUY_CATEGORY = "What kind of food are you looking for today? Send one category such as 'tacos' or 'fruta'."
+    BUY_LIST = "The following is a list of vendors near you!"
+    SELL_PHONE = "What is your phone number? Send your 10 digit phone number."
+    SELL_CREATE = "We cannot find your number in our system. " + 
+                "Please help us create your account by providing the following information. "
+    SELL_CREATE_CATEGORY = "Please indicate the cateogry of your product below (i.e. 'tacos', 'mangonadas')"
+    SELL_CREATE_PRODUCTS = "Please indicate specific products you sell or additional items (i.e. 'carne asada', 'sandia') " +
+                "This is optional. To skip, type 'skip'."
+    state_properties = ["category", "products", "picture", "address", "open?"]
+    SELL_EDIT = "You may edit your "
+
     def __init__(self):
-        self.history = []
+        self.current_node = BUY_OR_SELL
+
+
     
     def reset(self):
         self.history = []
